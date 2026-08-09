@@ -1,9 +1,20 @@
-Blog Review: “Can your camera tell if you’re bored?” The article “Can your camera tell if you’re bored?” delves into the intriguing field between Computer Vision and human psychology, where even Machine Learning models like CNN (Convolutional Neural Network) attempt to read user emotions. 
+Blog Review: The mechanics of recognizing facial emotion via MediaPipe.
+When it comes to the mechanics of recognizing emotional responses, I find the underlying system of Google's MediaPipe-an open-source ML system-to be really interesting. In order to determine an emotion from a raw image, the process can actually be divided into four mathematical-based stages.
 
-We all know how many AI apps like Snapchat, TikTok are good at detecting what the subject in the picture is, but not a wide majority knows how deep it runs by analyzing a subject’s facial movements. 
+Stage 1: Map the Face.
+The system uses Face Mesh-a 3D graphing device that can detect 468 specific facial landmarks in a millisecond-as its base. The algorithm basically scans the photo, extracts the face, and throws the background away. As this 468-dot grid represents specific points on the face, each point has three coordinates, X, Y, and Z. With this increasing accuracy with number of dots, the image generates a 1404 (468*3) mathematically derived number representing the face itself.
 
-These AI systems analyze your facial micro-expressions- by determining their eyes landmarkposition, arch of their brows, or the curvature of their mouth to check if you’re engrossed, focus or maybe even bored. My most significant takeaways from the readings: After I saw this article I was astonished that how in-depth we can interpret the geometric expressions in data to associate human context. According to the article, building a face mathematically is only halfway, in reality, the true algorithmic complexity lies when a model has to deal with variousedgecases to determine whether someone is disengaging and looking downwards due to utter indifference, or simply due to them writing detailed notes to improve subject grasp. This evidently proves,that despite the fact that AI has been accurately able to classify geometry, determining context is tricky even for most advanced systems and this issue only happens because of the training of narrow datasets for specific purposes preventing it from giving false predictions(FP). 
+Stage 2: Normalize the Face.
+Because the image given to the system can vary by distance, size, and angel-the algorithm has to make it more uniform and stable. Using a transformation matrix(the equivalent of rotating, scaling and translating), the system centers the faces at a single spot making its orientation and size identical. An interesting feature that this system has to offer is it actually does not save the actual image, only the 1404 number is kept, meaning that your privacy is safe.
 
-The idea that facial landmarks are meticulously analyzed to read human emotion strongly resonates with my image manipulation skills and experiences with Generative AI. 
+Stage 3: Feature Extraction.
+Once all the 1404 points are extracted the system then finds the emotion in one of three ways:
 
-Working on apps like Instagram we face some major challenges while adapting aspect ratio and making sure no distortion is made while fitting the frame and keeping high image quality in the subject's face. By learning thatclassificationmodels are capable to extract the same exact facial geometry and map it to human emotions, made me think deeper about how images processing works under the hood of things, so to compare these models and their implications with what I do in image processing.
+The Ruler Method (Action Units). This looks for minute muscle movements across the face that combine to form expressions but cannot identify movement from forehead.
+
+Deep Learning (Raw Coordinates). This sends all the 1404 points to a neural net where it essentially uses a "difference vector," which takes a person's base neutral face and finds out the difference in the coordinates of their emotional face from their neutral face. This eliminates base facial characteristics.
+
+Blendshapes. This is Google's in-house method to overcome vector complexities-it has trained it's system on millions of faces allowing it to provide the level of each of the 52 basic expressions directly.
+
+Stage 4: Classification.
+After finding the emotion based on the data collected, the final stage is to classify this emotion as "Happy" for example. Traditional ML methods can be used like a Random Forest model, which is essentially a bunch of sequential yes/no decisions, or an SVM or Support Vector Machine that draw boundaries, meaning if the smile value is higher with more eye squinting that implies shock or happiness while a medium value with only a smile implies anger. More advanced networks like a CNN or GNN network can also do this, and are able to learn these complex layer networks independently to provide the exact classification.processing.
